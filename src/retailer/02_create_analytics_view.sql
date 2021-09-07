@@ -31,6 +31,7 @@ CREATE OR REPLACE VIEW `coop_analytics.GASessionsYesterday` AS (
   FROM
     `bigquery-public-data.google_analytics_sample.ga_sessions_*`
   WHERE
-    _table_suffix = '20170801'
-    -- PARSE_DATE('%Y%m%d', _table_suffix) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+    _TABLE_SUFFIX NOT LIKE 'intraday%'
+    AND _table_suffix = '20170801'
+    -- AND PARSE_DATE('%Y%m%d', _table_suffix) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
 )

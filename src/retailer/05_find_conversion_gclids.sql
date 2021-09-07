@@ -28,6 +28,7 @@
  * Required changes to use:
  *  - Update the FROM statement to read from your Analytics export.
  *  - Change the 90 in the WHERE statement to the desired lookback window.
+ *  - Update the CustomDimension.index to the index of the Custom Dimension containing the GCLID.
  */
 
 -- Create the data partitioned table if it doesn't exist.
@@ -47,12 +48,13 @@ INSERT INTO `coop_analytics.BrandConversions`
 SELECT DISTINCT
   Campaigns.brand,
   Campaigns.campaignId,
-  Analytics.trafficSource.adwordsClickInfo.gclId,
+  CustomDimension.value as gclId,
   Conversions.conversionType,
   Conversions.conversionDateTime,
   Conversions.conversionValue,
 FROM
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS Analytics
+  `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS Analytics,
+  UNNEST(customDimensions) as CustomDimension
 INNER JOIN
   `coop_analytics.ConversionsAll` AS Conversions
   ON Analytics.fullVisitorId = Conversions.fullVisitorId
@@ -63,7 +65,10 @@ INNER JOIN
     AND Campaigns.utmMedium = Analytics.trafficSource.medium
     AND Campaigns.utmCampaign = Analytics.trafficSource.campaign
 WHERE
-  Analytics.trafficSource.adwordsClickInfo.gclId IS NOT NULL
+  -- Change this value to the index of the custom dimension containing the GCLID
+  CustomDimension.index = 4
+  AND CustomDimension.value IS NOT NULL
+  AND Analytics._TABLE_SUFFIX NOT LIKE 'intraday%'
   AND (
     TIMESTAMP_SECONDS(Analytics.visitStartTime) >= TIMESTAMP_SUB(
       Conversions.conversionDateTime, INTERVAL 90 DAY)

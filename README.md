@@ -38,7 +38,8 @@ socks on Retailer ABC's website. This would be the data flow:
    https://retailer-abc.com/products/global-brand-inc-socks.html?utm_source=gbi_brand&utm_campaign=123&gclid=987zyx
 
 1. Google Analytics on Retailer ABC's website will capture the GCLID and UTM
-   parameters. No action is needed.
+   parameters. See the [prerequisites](#Prerequisites) to ensure this
+   behaves this way.
 
 1. Retailer ABC sets up the [Google Analytics 360 BigQuery export](
    https://support.google.com/analytics/answer/3437618?hl=en) in their own
@@ -99,11 +100,47 @@ socks on Retailer ABC's website. This would be the data flow:
     https://marketingplatform.google.com/about/analytics-360/) customer ([the
     BigQuery export](https://support.google.com/analytics/answer/3437618?hl=en)
     is only available to Analytics 360 customers.)
-  - Have [E-Commerce tracking](
-    https://support.google.com/analytics/answer/1037249?hl=en) set up.
+  - Have [Enhanced Ecommerce actions set up](https://developers.google.com/tag-manager/enhanced-ecommerce).
+    This code uses the actions to identify conversions.
   - Have a Google Cloud Project with access to [BigQuery](
     https://cloud.google.com/bigquery).
+  - Set up a custom dimension at "session" level scope, that captures the GCLID
+    and stores it as a custom dimension, see below for more details.
 
+
+### GCLID Custom Dimension
+
+Google Analytics validates the GCLID values that are appended to a query
+string, and "invalid" GCLIDs are ignored, not stored in Google Analytics and
+therefore don't make it to the BigQuery export.
+
+The GCLID is encrypted data that contains information about the
+Google Ads campaign it originated from.
+
+The below example is clearly not going to be a valid value:
+
+https://retailer-abc.com/products/global-brand-inc-socks.html?gclid=987zyx
+
+So this is ignored.
+
+However, it's more complicated in our scenario, as a real GCLID will be
+appended to the URL, but it will be from a different business's account; the
+GCLID comes from the brand's Ads account, but the Analytics account belongs
+to the retailer. As the GCLID comes from a foreign account, this is
+considered invalid by Google Analytics.
+
+This problem can be solved in two ways:
+
+1. [Link the brand's Ads account with the retailer's Analytics account](https://support.google.com/analytics/answer/1033961?hl=en#zippy=%2Cin-this-article).
+   Or,
+2. Store the GCLID as a [custom dimension](https://support.google.com/analytics/answer/2709828?hl=en#zippy=%2Cin-this-article)
+   with "session" level scope.
+
+Option 1 solves the problem, as Google Analytics will now treat the GCLID as
+coming from a valid account. However, many brands/retailers will be
+uncomfortable with this account linking. As a result, this project uses
+solution 2 above, so the accounts are not linked and there is still
+separation between the businesses' Ads/Analytics accounts.
 
 ## Get Started
 For information on how to get started visit [the get started guide](

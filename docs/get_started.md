@@ -85,6 +85,8 @@ Below outlines the modifications required to each script:
   - The 90 in the WHERE condition is the number of days in the lookback window:
     `TIMESTAMP_SUB(Conversions.conversionDateTime, INTERVAL 90 DAY)` Change this
     to the appropriate value.
+  - In the WHERE clause update `CustomDimension.index = 4` to the index of
+    the custom dimension containing the GCLID.
 
 - **06_create_brand_views.sql**: creates brand specific views of the data, so a
   brand can only view data that is to be shared with them. Changes:
@@ -103,8 +105,9 @@ Below outlines the modifications required to each script:
 [BigQuery supports scheduling queries](
 https://cloud.google.com/bigquery/docs/scheduling-queries). This is the simplest
 solution to scheduling. However, the Analytics transfer has no SLAs and is not
-guaranteed to run by a certain time. If this scheduling is deployed it is
-recommended to run the scripts towards the end of the day.
+guaranteed to run by a certain time. If this scheduling is deployed, combine
+all the SQL scripts into one query, and schedule the script towards the end of
+the day.
 
 For more advanced scheduling, [Pub/Sub](
 https://cloud.google.com/pubsub/docs/overview) could be deployed to trigger a
