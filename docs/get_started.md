@@ -118,3 +118,55 @@ scripts.
 
 - [The Analytics BigQuery Schema](
   https://support.google.com/analytics/answer/3437719?hl=en)
+
+## Brand
+
+A brand can report conversions to Google Ads via the
+[Offline Conversion API](https://developers.google.com/google-ads/api/docs/samples/upload-offline-conversion).
+
+For a lower barrier to entry, the brand could use the
+[Google Ads conversion import from Google Sheets](https://support.google.com/google-ads/answer/7014069?hl=en-GB).
+
+### Google Sheet Import
+
+To set up the conversion import from Google Sheets the following needs to be
+done:
+
+1.  Create a new Google Sheet.
+
+1.  Go to extensions -> app script.
+
+1.  Copy the content of [app_script.js](../src/brand/app_script.js) into the
+    code editor, replacing any code that exists.
+
+1.  Click on the `+` next to services in the left hand panel and add the
+    BigQuery API.
+
+1.  At the top of the code are a number of variables that need to be updated,
+    for example, the Cloud project ID, the name of the table containing the
+    conversions etc.
+
+1.  To run the code once, run the `main()` function. This should output all the
+    conversions to the Google Sheet.
+
+1.  To schedule the script to run daily:
+
+    1.  Select triggers from the left hand menu.
+
+    1.  Add trigger.
+
+    1.  Make sure the following options are selected:
+
+        -   Choose which function to run: main
+
+        -   Which runs as deployment: head
+
+        -   Select event source: Time-driven
+
+        -   Select type of time based trigger: Day timer
+
+        -   Select time of day: Midnight to 1am (or another time if you prefer)
+
+1.  In the Google Ads UI configure the conversions to be imported from the
+    Google Sheet
+    [by following these instructions](https://support.google.com/google-ads/answer/7014069?hl=en-GB).
