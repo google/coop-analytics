@@ -72,7 +72,7 @@ function getBigQueryData() {
   const query = `
     SELECT
       gclId,
-      FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', conversionDateTime) AS conversionDateTime,
+      FORMAT_TIMESTAMP('%Y-%m-%dT%H:%M:%S%z', conversionDateTime) AS conversionDateTime,
       conversionValue,
       conversionType,
     FROM
