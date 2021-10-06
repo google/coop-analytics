@@ -1,3 +1,6 @@
 # IDE Directories
 .vscode/
 .idea/
+
+# Virtual Envs
+venv/

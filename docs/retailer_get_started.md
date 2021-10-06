@@ -1,8 +1,7 @@
-# Coop Analytics - Get Started
+# Coop Analytics - Retailer Get Started
 
-This guide explains how to get started with the code in this project.
-
-## Retailer
+This guide explains how to get started with the code in this project as a
+retailer.
 
 The code in this project uses the [Google Analytics sample dataset for
 BigQuery](https://support.google.com/analytics/answer/7586738?hl=en), as a proof
@@ -10,7 +9,7 @@ of concept. The scripts provided are examples and require modifying to work with
 your data. Each script provides instructions in the header for the
 modifications, alternatively continue reading for the full instructions.
 
-### Overview
+## Overview
 
 1. As the retailer, set up the [BigQuery export for Google Analytics 360](
    https://support.google.com/analytics/answer/3437618?hl=en) into a Google
@@ -36,7 +35,7 @@ modifications, alternatively continue reading for the full instructions.
      specific restrictions/requirements.
 
 
-### SQL Scripts
+## SQL Scripts
 
 The scripts by default create resources in a dataset called `coop_analytics`.
 This dataset either needs to be created, or the scripts need to be modified to
@@ -100,7 +99,7 @@ Below outlines the modifications required to each script:
     `CREATE OR REPLACE TABLE` to create a copy of the data instead.
 
 
-### Scheduling
+## Scheduling
 
 [BigQuery supports scheduling queries](
 https://cloud.google.com/bigquery/docs/scheduling-queries). This is the simplest
@@ -114,59 +113,7 @@ https://cloud.google.com/pubsub/docs/overview) could be deployed to trigger a
 [cloud function](https://cloud.google.com/functions) to orchestrate the SQL
 scripts.
 
-### Useful Links
+## Useful Links
 
 - [The Analytics BigQuery Schema](
   https://support.google.com/analytics/answer/3437719?hl=en)
-
-## Brand
-
-A brand can report conversions to Google Ads via the
-[Offline Conversion API](https://developers.google.com/google-ads/api/docs/samples/upload-offline-conversion).
-
-For a lower barrier to entry, the brand could use the
-[Google Ads conversion import from Google Sheets](https://support.google.com/google-ads/answer/7014069?hl=en-GB).
-
-### Google Sheet Import
-
-To set up the conversion import from Google Sheets the following needs to be
-done:
-
-1.  Create a new Google Sheet.
-
-1.  Go to extensions -> app script.
-
-1.  Copy the content of [app_script.js](../src/brand/app_script.js) into the
-    code editor, replacing any code that exists.
-
-1.  Click on the `+` next to services in the left hand panel and add the
-    BigQuery API.
-
-1.  At the top of the code are a number of variables that need to be updated,
-    for example, the Cloud project ID, the name of the table containing the
-    conversions etc.
-
-1.  To run the code once, run the `main()` function. This should output all the
-    conversions to the Google Sheet.
-
-1.  To schedule the script to run daily:
-
-    1.  Select triggers from the left hand menu.
-
-    1.  Add trigger.
-
-    1.  Make sure the following options are selected:
-
-        -   Choose which function to run: main
-
-        -   Which runs as deployment: head
-
-        -   Select event source: Time-driven
-
-        -   Select type of time based trigger: Day timer
-
-        -   Select time of day: Midnight to 1am (or another time if you prefer)
-
-1.  In the Google Ads UI configure the conversions to be imported from the
-    Google Sheet
-    [by following these instructions](https://support.google.com/google-ads/answer/7014069?hl=en-GB).

@@ -143,8 +143,11 @@ solution 2 above, so the accounts are not linked and there is still
 separation between the businesses' Ads/Analytics accounts.
 
 ## Get Started
-For information on how to get started visit [the get started guide](
-docs/get_started.md).
+For information on how to get started, retailers visit [the retailer get
+started guide](
+docs/retailer_get_started.md).
+
+For brands visit [the brand get started guide](docs/brand_get_started.md).
 
 
 ## Disclaimers
