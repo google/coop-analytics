@@ -136,7 +136,9 @@ def get_bigquery_data(gcp_dataset_id: str,
       conversionValue,
       conversionType,
     FROM
-      {full_table_name}"""
+      {full_table_name}
+    WHERE
+      DATE(conversionDateTime) >=  DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY)"""
   query_job = BQ_CLIENT.query(query)
   return query_job.result()
 
