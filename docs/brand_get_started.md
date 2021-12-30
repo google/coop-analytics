@@ -131,7 +131,8 @@ done:
      --entry-point=main \
      --service-account=$GCP_CA_SERVICE_ACCOUNT_EMAIL \
      --trigger-http \
-     --region=europe-west2
+     --region=europe-west2 \
+     --timeout=540s
    ```
 
 1. Set up cloud scheduler to run the job daily. Update the cron schedule to
