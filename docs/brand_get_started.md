@@ -5,7 +5,7 @@ multiple ways to upload these conversions into Google Ads (or the other GMP
 products).
 
 For convenience, the brand might want to separate the table based on the
-campaign they are associated to. To to this, run this query in your Big Query
+campaign they are associated to. To this, run this query in your Big Query
 environment.
 
 ```
@@ -32,13 +32,13 @@ implementation:
     conversions to Google Ads and Campaign Manager. Prerequisites:
     [Developer token](https://developers.google.com/google-ads/api/docs/first-call/dev-token)
     needed if using the Google Ads connector.
-3.  Using the APIs directly: a brand can report conversions to Google Ads via
-    the
+3.  Using the APIs directly: A brand can report conversions to Google Ads via
+    the:
     [Offline Conversion API](https://developers.google.com/google-ads/api/docs/samples/upload-offline-conversion).
 
 ## Google Sheet Import
 
-For a lower barrier to entry, the brand could use the
+For a lower barrier to entry, the brand could use the:
 [Google Ads conversion import from Google Sheets](https://support.google.com/google-ads/answer/7014069?hl=en-GB).
 
 There are two methods for extracting the data into Google Sheets:
@@ -121,7 +121,7 @@ done:
     ```
 
 1.  Create a service account that is going to be used to run the code, and give
-    it access to BigQuery, Cloud Scheduler & Cloud Functions.
+    it access to BigQuery, Cloud Scheduler & Cloud Functions:
 
     ```
     export GCP_CA_SERVICE_ACCOUNT=coop-analytics-sa
