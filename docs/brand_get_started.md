@@ -5,7 +5,7 @@ multiple ways to upload these conversions into Google Ads (or the other GMP
 products).
 
 For convenience, the brand might want to separate the table based on the
-campaign they are associated to. To this, run this query in your Big Query
+campaign they are associated to. To do this, run this query in your Big Query
 environment.
 
 ```
