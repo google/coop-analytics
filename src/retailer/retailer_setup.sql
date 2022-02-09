@@ -31,7 +31,7 @@ AS (
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
   WHERE _TABLE_SUFFIX NOT LIKE 'intraday%' AND _table_suffix = '20170801'
   -- AND PARSE_DATE('%Y%m%d', _table_suffix) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
-)
+);
 
 /*
  * Step 2a: Create a view containing the fullVisitorIDs of purchasers.
@@ -61,7 +61,7 @@ AS (
     -- https://support.google.com/analytics/answer/3437719?hl=en
     Hits.eCommerceAction.action_type = '6'
   GROUP BY 1, 2, 3, 4
-)
+);
 
 /*
  * Step 2b: Create a view containing the fullVisitorIDs of visitors who add products to their basket.
@@ -91,7 +91,7 @@ AS (
     -- https://support.google.com/analytics/answer/3437719?hl=en
     Hits.eCommerceAction.action_type = '3'
   GROUP BY 1, 2, 3, 4
-)
+);
 
 /*
  * Step 2c: Create a view containing the fullVisitorIDs of visitors who view the product details page.
@@ -121,7 +121,7 @@ AS (
     -- https://support.google.com/analytics/answer/3437719?hl=en
     Hits.eCommerceAction.action_type = '2'
   GROUP BY 1, 2, 3, 4
-)
+);
 
 /*
  * Step 3: Create a view unioning all the conversion types together.
@@ -133,7 +133,7 @@ AS (
   SELECT * FROM `coop_analytics.ConversionsAddToBasket`
   UNION ALL
   SELECT * FROM `coop_analytics.ConversionsProductDetailsView`
-)
+);
 
 /*
  * Step 4: Find which conversions came from a Coop Campaign and write results to a table.
@@ -179,9 +179,9 @@ INNER JOIN `coop_analytics.ConversionsAll` AS Conversions
   ON Analytics.fullVisitorId = Conversions.fullVisitorId
 INNER JOIN
   (
-    SELECT campaignId, utmSource, utmMedium, utmCampaign, ARRAY_AGG(sku) AS skus
+    SELECT campaignId, brand, utmSource, utmMedium, utmCampaign, ARRAY_AGG(sku) AS skus
     FROM `coop_analytics.CoopCampaigns`
-    GROUP BY campaignId, utmSource, utmMedium, utmCampaign
+    GROUP BY campaignId, brand, utmSource, utmMedium, utmCampaign
   ) AS Campaigns
   ON
     Campaigns.campaignId = Conversions.campaignId
@@ -219,9 +219,9 @@ FOR
           FORMAT(
             '''
  CREATE OR REPLACE VIEW `%s.CoopAnalyticConversions` AS (
- SELECT * 
+ SELECT *
  FROM `coop_analytics.BrandConversions`
- WHERE brand = %s
+ WHERE brand = "%s"
  )
  ''',
             brand.brand,

@@ -28,14 +28,11 @@ import google.auth
 from google.cloud import bigquery
 from googleapiclient.discovery import build
 
-
 # Create a BQ client object
 BQ_CLIENT = bigquery.Client()
 
 # The scopes for the Google Sheets API
-SCOPES = [
-    'https://www.googleapis.com/auth/spreadsheets'
-]
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # Create a Google Sheets service to the API using the service account creds.
 CREDENTIALS, _ = google.auth.default(scopes=SCOPES)
 GOOGLE_SHEET_SERVICE = build('sheets', 'v4', credentials=CREDENTIALS)
@@ -52,9 +49,7 @@ def main(request):
 
   Args:
       request (flask.Request): HTTP request object.
-      The payload should take the form:
-
-      {
+      The payload should take the form:  {
         "gcp_dataset_id": "coop_analytics",
         "gcp_table_name": "BrandConversions",
         "google_sheet_id": "abcdefg123",
@@ -62,19 +57,16 @@ def main(request):
         "conversion_map": {
             "PURCHASE": "Revenue",
             "ADD_TO_BASKET": "Add to basket",
-            "PRODUCT_DETAILS_VIEW": "Landing page view",
-        }
-      }
-
+            "PRODUCT_DETAILS_VIEW": "Landing page view", } }
       - gcp_dataset_id: the BigQuery dataset containing the conversion data.
       - gcp_table_name: the name of the table in BigQuery containing the
-          conversion data.
+        conversion data.
       - google_sheet_id: the Sheet ID of the Google Sheet to output the
-          conversions to.
+        conversions to.
       - google_sheet_range: the range in the sheet to use.
       - conversion_map: this maps the conversion type in BigQuery to a
-          conversion action in Google Ads. The key is the conversion type column
-          in BigQuery, the value is the name of the conversion action.
+        conversion action in Google Ads. The key is the conversion type column
+        in BigQuery, the value is the name of the conversion action.
 
   Returns:
       A JSON response confirming the status as COMPLETED.
@@ -84,8 +76,10 @@ def main(request):
   logger.info('Checking payload is as expected.')
   payload = request.get_json(silent=True)
   request_keys = set(payload.keys())
-  expected_keys = {'gcp_dataset_id', 'gcp_table_name', 'google_sheet_id',
-                   'google_sheet_range', 'conversion_map'}
+  expected_keys = {
+      'gcp_dataset_id', 'gcp_table_name', 'google_sheet_id',
+      'google_sheet_range', 'conversion_map'
+  }
 
   if request_keys != expected_keys:
     logger.error('Payload keys do not match the expected keys.')
@@ -111,7 +105,7 @@ def main(request):
 
 
 def get_bigquery_data(gcp_dataset_id: str,
-    gcp_table_name: str) -> bigquery.table.RowIterator:
+                      gcp_table_name: str) -> bigquery.table.RowIterator:
   """Fetch the conversion data from BigQuery.
 
   Args:
@@ -152,14 +146,12 @@ def clear_google_sheet(sheet_id: str, sheet_range: str) -> None:
   """
   logger.info(f'- Clearing range: {sheet_range}')
   request = GOOGLE_SHEET_SERVICE.spreadsheets().values().clear(
-      spreadsheetId=sheet_id,
-      range=sheet_range,
-      body={})
+      spreadsheetId=sheet_id, range=sheet_range, body={})
   request.execute()
 
 
 def write_to_google_sheet(data: List[List[Any]], sheet_id: str,
-    sheet_range: str) -> None:
+                          sheet_range: str) -> None:
   """Write the data to the Google Sheet.
 
   Args:
@@ -199,8 +191,8 @@ def add_headers_to_google_sheet(sheet_id: str, sheet_range: str) -> None:
 
 
 def parse_rows_and_output(rows: bigquery.table.RowIterator, sheet_id: str,
-    sheet_range: str, conversion_map: Dict[str,
-                                           str]) -> None:
+                          sheet_range: str, conversion_map: Dict[str,
+                                                                 str]) -> None:
   """Parse the BigQuery rows and write them to the Google Sheet.
 
   Args:

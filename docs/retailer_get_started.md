@@ -24,13 +24,16 @@ modifications required on each step are provided in the comments and below.
 1.  In your Cloud project, open Cloud shell and run these commands to generate a
     table from the Google Sheet created above. Modify the first command by
     entering the Spreadsheet URL and the second command by entering dataset name
-    and table name. By default, tables are created in the `coop_analytics` but
-    it can be a name of your choice.
+    and table name. By default, this and the following tables are created in the
+    `coop_analytics` dataset but it can be a name of your choice. The table
+    created by this command will be called `CoopCampaigns` by default. If you
+    change the table name, please replace it in the retailer_setup.sql script
+    too.
 
     ```
     bq mkdef --autodetect --source_format=GOOGLE_SHEETS "INSERT_SPREADSHEET_URL" > /tmp/bq_create_table
 
-    bq mk -table --schema=sku:STRING,campaignId:STRING,brand:STRING,utmSource:STRING,utmMedium:STRING,utmCampaign:STRING --external_table_definition=/tmp/bq_create_table coop_analytics.table_name
+    bq mk -table --schema=sku:STRING,campaignId:STRING,brand:STRING,utmSource:STRING,utmMedium:STRING,utmCampaign:STRING --external_table_definition=/tmp/bq_create_table coop_analytics.CoopCampaigns
     ```
 
 1.  Modify the SQL script in this project (more details below).
