@@ -16,7 +16,7 @@ modifications required on each step are provided in the comments and below.
     into a Google Cloud Project.
 
 1.  Make a copy of this
-    [spreadsheet](https://docs.google.com/spreadsheets/d/1Mq5VPuDpJ64t6yC5RH2yvw2QQzO0Bkc0R_x2zh0RQek)
+    [spreadsheet](https://docs.google.com/spreadsheets/d/1Mq5VPuDpJ64t6yC5RH2yvw2QQzO0Bkc0R_x2zh0RQek/edit?usp=sharing&resourcekey=0-mmj4bfs_9YYa2Z1KcmpCmQ)
     and edit the configuration based on the agreement with the brand: clear all
     the sample data and replace this with the agreed SKUs, UTM parameters, a
     unique campaign name, and the name of the brand.
