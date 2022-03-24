@@ -42,7 +42,7 @@ socks on Retailer ABC's website. This would be the data flow:
    behaves this way.
 
 1. Retailer ABC sets up the [Google Analytics 360 BigQuery export](
-   https://support.google.com/analytics/answer/3437618?hl=en) in their own
+   https://support.google.com/analytics/answer/3437618?hl=en) (or [GA4 BigQuery export](https://support.google.com/analytics/answer/9358801?hl=en&ref_topic=9359001)) in their own
    Google Cloud Project. Global Brand Inc. will not have access to this.
 
 1. Retailer ABC runs the SQL scripts in this project to find conversions for
@@ -99,13 +99,13 @@ socks on Retailer ABC's website. This would be the data flow:
   - Be a [Google Analytics 360](
     https://marketingplatform.google.com/about/analytics-360/) customer ([the
     BigQuery export](https://support.google.com/analytics/answer/3437618?hl=en)
-    is only available to Analytics 360 customers.)
+    is only available to Analytics 360 customers) or use the [GA4 BigQuery export](https://support.google.com/analytics/answer/9358801?hl=en&ref_topic=9359001).
   - Have [Enhanced Ecommerce actions set up](https://developers.google.com/tag-manager/enhanced-ecommerce).
     This code uses the actions to identify conversions.
   - Have a Google Cloud Project with access to [BigQuery](
     https://cloud.google.com/bigquery).
   - Set up a custom dimension at "session" level scope, that captures the GCLID
-    and stores it as a custom dimension, see below for more details.
+    and stores it as a custom dimension, see below for more details. In GA4, the custom dimension should be set up at "event" level scope.
 
 
 ### GCLID Custom Dimension

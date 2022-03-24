@@ -5,14 +5,14 @@ retailer.
 
 The code in this project uses the
 [Google Analytics sample dataset for BigQuery](https://support.google.com/analytics/answer/7586738?hl=en),
-as a proof of concept. The script provided is an example and require modifying
+as a proof of concept (see [GA4 sample dataset](https://support.google.com/analytics/answer/10937659?hl=en&ref_topic=9359001#zippy=%2Cin-this-article) for the GA4 implementation). The script provided is an example and require modifying
 to work with your data. The script has 5 separate steps, instructions for the
 modifications required on each step are provided in the comments and below.
 
 ## Overview
 
 1.  As the retailer, set up the
-    [BigQuery export for Google Analytics 360](https://support.google.com/analytics/answer/3437618?hl=en)
+    [BigQuery export for Google Analytics 360](https://support.google.com/analytics/answer/3437618?hl=en) (or [GA4 BigQuery export](https://support.google.com/analytics/answer/9358801?hl=en&ref_topic=9359001))
     into a Google Cloud Project.
 
 1.  Make a copy of this
@@ -27,8 +27,8 @@ modifications required on each step are provided in the comments and below.
     and table name. By default, this and the following tables are created in the
     `coop_analytics` dataset but it can be a name of your choice. The table
     created by this command will be called `CoopCampaigns` by default. If you
-    change the table name, please replace it in the retailer_setup.sql script
-    too.
+    change the table name, please replace it in the `retailer_setup.sql` script
+    too (with GA4, please use `retailer_setup_GA4.sql`).
 
     ```
     bq mkdef --autodetect --source_format=GOOGLE_SHEETS "INSERT_SPREADSHEET_URL" > /tmp/bq_create_table
@@ -60,7 +60,7 @@ The script by default creates resources in a dataset called `coop_analytics`.
 This dataset either needs to be created, or the script needs to be modified to
 write to a dataset name of your choice.
 
-Below outlines the modifications required to each script:
+Below outlines the modifications required to each step:
 
 -   **Step 1 - Create analytics view**: creates a view of yesterday's Analytics
     export. Changes:
@@ -69,7 +69,7 @@ Below outlines the modifications required to each script:
         `bigquery-public-data.google_analytics_sample.ga_sessions_*` needs to be
         replaced with your Analytics dataset. Note the `*` at the end of the
         table, this needs to be present at the end of yours, as it is replaced
-        in the WHERE clause using yesterday's date.
+        in the WHERE clause using yesterday's date. If you're setting this up with the GA4 export, replace `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`.
     -   The WHERE clause needs updating to remove the hardcoded date example,
         and replaced with the commented out text.
 
@@ -95,13 +95,13 @@ Below outlines the modifications required to each script:
     -   This script uses any click attribution, if this is not correct this
         script needs to be tweaked.
     -   The FROM statement references the sample Analytics data
-        `bigquery-public-data.google_analytics_sample.ga_sessions_*`. This needs
+        `bigquery-public-data.google_analytics_sample.ga_sessions_*` (or `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` for GA4). This needs
         to be replaced, again with the wildcard `*`.
     -   The 90 in the WHERE condition is the number of days in the lookback
         window: `TIMESTAMP_SUB(Conversions.conversionDateTime, INTERVAL 90 DAY)`
         Change this to the appropriate value.
     -   In the WHERE clause update `CustomDimension.index = 4` to the index of
-        the custom dimension containing the GCLID.
+        the custom dimension containing the GCLID. In the GA4 version, update the `EventParams.key` to the name of the Custom Dimension containing the GCLID.
 
 -   **Step 5 - Create brand views**: creates brand specific views of the data,
     so a brand can only view data that is to be shared with them. Changes:
@@ -132,3 +132,4 @@ the SQL scripts.
 ## Useful Links
 
 -   [The Analytics BigQuery Schema](https://support.google.com/analytics/answer/3437719?hl=en)
+-   [The GA4 BigQuery Schema](https://support.google.com/analytics/answer/7029846?hl=en)
