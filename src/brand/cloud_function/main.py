@@ -5,7 +5,7 @@ https://support.google.com/google-ads/answer/7014069?hl=en-GB
 
 Before running view the README.md for how to set up and deploy this code.
 
-Copyright 2020 Google LLC
+Copyright 2022 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ def main(request):
   Args:
       request (flask.Request): HTTP request object.
       The payload should take the form:  {
+        "gcp_project_id": "project123",
         "gcp_dataset_id": "coop_analytics",
         "gcp_table_name": "BrandConversions",
         "google_sheet_id": "abcdefg123",
@@ -58,6 +59,7 @@ def main(request):
             "PURCHASE": "Revenue",
             "ADD_TO_BASKET": "Add to basket",
             "PRODUCT_DETAILS_VIEW": "Landing page view", } }
+      - gcp_project_id: the Cloud project containing the BQ dataset.
       - gcp_dataset_id: the BigQuery dataset containing the conversion data.
       - gcp_table_name: the name of the table in BigQuery containing the
         conversion data.
@@ -81,7 +83,7 @@ def main(request):
       'google_sheet_range', 'conversion_map'
   }
 
-  if request_keys != expected_keys:
+  if not request_keys.issuperset(expected_keys):
     logger.error('Payload keys do not match the expected keys.')
     logger.error(request_keys)
     logger.error(expected_keys)
@@ -91,8 +93,13 @@ def main(request):
         'payload_keys': request_keys,
         'expected_keys': expected_keys,
     }), 400
+  
+  # If no project ID is specified, use current project ID
+  project_id = payload.get('gcp_project_id', process.env.GCP_PROJECT)
 
-  rows = get_bigquery_data(payload['gcp_dataset_id'], payload['gcp_table_name'])
+  rows = get_bigquery_data(project_id,
+                          payload['gcp_dataset_id'],
+                          payload['gcp_table_name'])
   clear_google_sheet(payload['google_sheet_id'], payload['google_sheet_range'])
   add_headers_to_google_sheet(payload['google_sheet_id'],
                               payload['google_sheet_range'])
@@ -104,11 +111,13 @@ def main(request):
   return jsonify({'status': 'COMPLETED'})
 
 
-def get_bigquery_data(gcp_dataset_id: str,
+def get_bigquery_data(gcp_project_id: str,
+                      gcp_dataset_id: str,
                       gcp_table_name: str) -> bigquery.table.RowIterator:
   """Fetch the conversion data from BigQuery.
 
   Args:
+    gcp_project_id: the Cloud project id containing the BigQuery dataset
     gcp_dataset_id: the BigQuery dataset containing the conversion data.
     gcp_table_name: the name of the table in BigQuery containing the conversion
       data.
@@ -122,7 +131,7 @@ def get_bigquery_data(gcp_dataset_id: str,
       - conversionType
   """
   logger.info('- Getting rows from BiqQuery.')
-  full_table_name = f'{gcp_dataset_id}.{gcp_table_name}'
+  full_table_name = f'{gcp_project_id}.{gcp_dataset_id}.{gcp_table_name}'
   query = f"""
     SELECT
       gclId,
