@@ -1,0 +1,7 @@
+logging
+sys
+typing
+flask
+google.auth
+google.cloud
+googleapiclient.discovery
